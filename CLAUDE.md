@@ -107,6 +107,8 @@ Hash-based routing (works on `file://`), handled only by `js/app.js`.
 - **`params`.** `app.js` calls `render(container, { page, parts })`. `page` is the first segment, and `parts` is the rest, so `#/fridge/scan` gives `{ page: "fridge", parts: ["scan"] }`.
 - **Unbuilt screens.** If a screen isn't registered yet, `app.js` shows a "Coming soon" placeholder. `app.js` calls `render` on route change only. It does **not** re-render on store changes. A screen re-renders itself after its own `SL.store.set`, so inputs keep focus.
 
+**Who's eating.** Whenever profiles change (setup, adding or removing a child, demo household), `state.eaters` is reset to every profile ID. Any screen reading `eaters` drops IDs that no longer exist and falls back to everyone if none are left.
+
 **First run:** if `state.profiles` is empty, go to `#/setup`. The steps are:
 1. Disclaimer.
 2. "Use the demo household", or add yourself and then any children you cook for.
@@ -129,6 +131,7 @@ Target: from opening the app to safe meal ideas in under 3 minutes.
 | `#/recipes/import` | Import from link, pasted text or cookbook photo (mocked) | recipes.js |
 | `#/list` | Defaults to `#/list/grocery` | list.js |
 | `#/list/plan` | Weekly planner: drag recipes from the tray onto days × meals; leftovers fill later slots | list.js |
+| `#/list/plan/:recipeId` | Planner with that recipe highlighted at the top of the tray (from meal detail "Plan") | list.js |
 | `#/list/grocery` | Grocery list + budget bar + label warnings | list.js |
 | `#/family` | You and your children, with restrictions; label checks; weekly budget; Reset demo data | family.js |
 
@@ -138,7 +141,7 @@ Unknown routes go to `#/fridge` (or `#/setup` if there are no profiles). The sha
 - **Drag with Pointer Events** (`pointerdown`/`pointermove`/`pointerup`), not the HTML5 drag-and-drop API, which doesn't work reliably with touch on phones. Set `touch-action: none` on draggable cards. While dragging, highlight the cell under the pointer.
 - **What a drag can do.** Drag a tray recipe onto a cell to plan it. Drag a planned slot to another cell to move it, or back onto the tray to remove it.
 - **Keyboard and accessibility alternative (required, WCAG 2.5.7).** Every tray card and planned slot also has a **"Place…"** button. It opens a day + meal picker that does the same thing as a drop, so tab order and screen readers reach every action.
-- **Plan from meal detail.** "Plan" on meal detail goes to `#/list/plan` with that recipe at the top of the tray, highlighted.
+- **Plan from meal detail.** "Plan" on meal detail goes to `#/list/plan/<recipeId>`, which shows that recipe at the top of the tray, highlighted.
 - **Safety on drop.** Every drop rechecks the recipe with `SL.safety.checkMeal` for the current eaters. If any eater has a fail, the drop is refused with "Not safe for <names> yet. Apply the swap first." Tray cards show their badge.
 - **What a slot stores.** A placed slot stores the recipe, the current eaters and the effective servings.
 
