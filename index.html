@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Shelf Life</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#app">Skip to content</a>
+
+  <main id="app" class="app" tabindex="-1" aria-live="off">
+    <noscript>
+      <div class="card"><p>Shelf Life needs JavaScript turned on.</p></div>
+    </noscript>
+  </main>
+
+  <nav id="tabbar" class="tabbar" aria-label="Main" hidden>
+    <a class="tab" href="#/fridge" data-tab="fridge" aria-label="Fridge">
+      <span class="tab__icon" aria-hidden="true">🧊</span><span class="tab__label">Fridge</span>
+    </a>
+    <a class="tab" href="#/meals" data-tab="meals" aria-label="Meals">
+      <span class="tab__icon" aria-hidden="true">🍽️</span><span class="tab__label">Meals</span>
+    </a>
+    <a class="tab" href="#/recipes" data-tab="recipes" aria-label="Recipes">
+      <span class="tab__icon" aria-hidden="true">📖</span><span class="tab__label">Recipes</span>
+    </a>
+    <a class="tab" href="#/list" data-tab="list" aria-label="List">
+      <span class="tab__icon" aria-hidden="true">🛒</span><span class="tab__label">List</span>
+    </a>
+    <a class="tab" href="#/family" data-tab="family" aria-label="Family">
+      <span class="tab__icon" aria-hidden="true">👪</span><span class="tab__label">Family</span>
+    </a>
+  </nav>
+
+  <!-- Load order per CLAUDE.md section 5. Classic scripts only (works on file://). -->
+  <script src="data/ingredients.js"></script>
+  <script src="data/swaps.js"></script>
+  <script src="data/profiles.js"></script>
+  <script src="data/fridges.js"></script>
+  <script src="data/recipes.js"></script>
+  <script src="data/prices.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/safety.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/screens/family.js"></script>
+  <script src="js/screens/fridge.js"></script>
+  <script src="js/screens/meals.js"></script>
+  <script src="js/screens/recipes.js"></script>
+  <script src="js/screens/list.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
