@@ -48,7 +48,7 @@ PRD.md is the source of truth for product behavior. If this file and the PRD dis
    - **! Safe after a label check**: no fails, at least one label row.
    - **↻ Safe for X of Y with a fix**: some eaters fail, and the swaps in `fixes` fix every fail. X is `safeCount`, the number of eaters with no fail rows (label rows count toward X). Y is the number of eaters.
 
-   **When a meal counts as fixable.** For each failing ingredient, `fixes` holds the first swap in `data/swaps.js` order whose `from` is that ingredient and whose `fixes` cover every failing tag for every eater on it. The meal is `fixable` only if every failing ingredient has such a swap and, after applying all of them, `checkMeal` returns `safe` or `label`. Otherwise it is `unsafe` and is **not suggested** (PRD goal 3).
+   **When a meal counts as fixable.** For each failing ingredient, `fixes` holds the first swap in `data/swaps.js` order whose `from` is that ingredient and whose `fixes` cover every failing tag for every eater on it. A `custom:` avoid fail is covered by any swap away from that ingredient. The meal is `fixable` only if every failing ingredient has such a swap and, after applying all of them, `checkMeal` returns `safe` or `label`. Otherwise it is `unsafe` and is **not suggested** (PRD goal 3).
 
    Recipe detail in the Keeper may show an `unsafe` recipe as **✕ Not safe for <names>**. This is the only red in the app.
 6. **Show your work.** Each meal's detail shows, for each person, every ingredient with `pass`, `fail` or `label` and a plain-language reason (e.g. "Soy sauce usually contains wheat. Jordan has celiac."). A person with no restrictions gets pass rows reading "Sam has no food restrictions." All reason text is written in `js/safety.js`.
@@ -285,6 +285,27 @@ SL.data.prices = { "soy-sauce": { perUnit: 0.12, unit: "tbsp" } };
 | `SL.list.build(state)` | list.js | `{ items: [{ ingredientId, aisle, amount, unit, costUSD, warnings: [{ personId, text }] }], totalUSD, budgetUSD }` |
 | `SL.share.open(kind, payload)` / `SL.share.report(recipeId)` | share.js | opens the overlay; `kind` is `"recipe"` (`{ recipeId }`), `"plan"` (`{ weekStart }`) or `"list"` (`{}`) |
 | `SL.app.go(route)` | app.js | navigates |
+
+**Servings, macros and cost.**
+- **`scale(recipe, n)`** returns a copy with `servings: n` and every amount × `n / (recipe.servings || recipe.baseServings)`, so scaling an already-scaled recipe doesn't double-scale.
+- **The serving count** is `recipe.servings || recipe.baseServings`. `macros` and `cost` divide totals by it.
+- **Rounding.** `macros` returns whole numbers. `cost.usd` is rounded to cents.
+- **Leaving lines out.** Staples are left out of cost only. Unmatched lines are left out of both and counted in `excludedCount`.
+
+**`effective(id, state)`**:
+1. Look up the recipe with `find`.
+2. For each `recipeOverrides[id].swaps` entry `{ from: to }`, take the matching swap object from `SL.data.swaps` and call `SL.safety.applySwap`.
+3. If `recipeOverrides[id].servings` is set, `scale` to it.
+
+**`SL.list.build(state)`**:
+1. For every plan slot on or after `weekStart` with `leftoverOf: null`, take `effective(recipeId)` scaled to the slot's `servings`.
+2. Sum the amounts per ingredient across those slots.
+3. Drop staples, unmatched lines and any ingredient with a fridge item where `confirmed: true`.
+4. Each item's `costUSD` is amount × `perUnit`, rounded to cents. `totalUSD` is the sum.
+5. **Warnings:** for each slot using the item, run `checkMeal(recipe, slot.eaterIds, state)`. Every `label` row for that ingredient becomes `{ personId, text: row.reason }`, one per person.
+6. Sort the items by aisle, then name.
+
+**`SL.safety.suggest`** considers `SL.data.recipes` plus `state.recipes` whose `mealTypes` include the meal type. Each one is turned into an effective recipe through `SL.recipes.effective`. Only fridge items with `confirmed: true` count as on hand.
 
 **Share overlay.**
 - **Link:** a mock URL `https://shelflife.app/s/<kind>-<id>` with the note "Links aren't live in this prototype."
