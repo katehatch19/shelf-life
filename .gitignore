@@ -1,0 +1,10 @@
+# Mac
+.DS_Store
+._*
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Personal Claude Code settings (each person keeps their own)
+.claude/settings.local.json

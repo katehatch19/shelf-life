@@ -1,0 +1,14 @@
+# Store and check out text files with LF line endings on every computer
+# (Windows and Mac alike), so a file saved on one OS doesn't show up as
+# "every line changed" on the other.
+* text=auto eol=lf
+
+# Binary files: never touch their bytes.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.pdf  binary
+*.zip  binary
