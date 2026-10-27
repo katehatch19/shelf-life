@@ -349,6 +349,7 @@ js/screens/list.js      Eleanor   planner + grocery list + budget, SL.list.build
 js/app.js               Kate      router, tab bar, boot on DOMContentLoaded (loaded LAST)
 tests.html              Makissa   in-browser checks (open by double-click)
 js/tests.js             Makissa   assertions for safety, list, scaling
+TESTING.md              Kate      hand-check list for teammates (other browsers, touch, keyboard, timing)
 ```
 
 **`styles.css`.** Kate owns the tokens and the shared component kit: card, buttons, the badges, chip, dashed unsure item, form rows, overlay, budget bar and print styles. Below them are sections marked `/* == screen: meals (Makissa) == */` and so on. Each screen's owner edits only their own section.
@@ -373,3 +374,5 @@ Open `tests.html` by double-clicking. All checks must show **PASS**. Then run th
 8. **Scan cap:** the 11th photo scan in a week is refused. Typing an item still works.
 9. **Persistence:** reload and everything is still there. Reset demo data returns to setup, and "Use the demo household" restores the mock household.
 10. **Accessibility:** every badge reads correctly with color turned off (grayscale), and tab order reaches every button.
+
+The parts a script can't cover (Safari, Firefox, real touch and keyboard, timing, grayscale) are split up by person in [TESTING.md](TESTING.md).
