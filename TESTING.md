@@ -9,7 +9,7 @@ You don't need GitHub skills or Claude Code for this. If anything is confusing o
 
 1. Open https://github.com/katehatch19/shelf-life in your browser (signed in to GitHub).
 2. Click the green "Code" button, then "Download ZIP".
-3. Open your Downloads folder and find the "shelf-life-main" folder. On a Mac, Safari unzips it for you. On Windows, right-click the zip and choose "Extract All".
+3. Open your Downloads folder. On a Mac, if you see "shelf-life-main.zip", double-click it to unzip it (Safari sometimes does this for you). On Windows, right-click the zip and choose "Extract All". You now have a "shelf-life-main" folder.
 4. Inside that folder, double-click "tests.html". It should say: PASS: 42 of 42 checks passed. If it doesn't, stop and tell Kate.
 5. Double-click "index.html". That's the app.
 
@@ -29,14 +29,16 @@ Do these in order inside the app:
 9. Click "See grocery list". Nothing that's already in your fridge should be on the list.
 
 
-## Eleanor (on your Mac)
+## Eleanor (Mac, Google Chrome)
 
-You're checking that the app works in Safari, and that the safety labels work without color.
+You're checking the safety labels without color, dragging with touch, and the grocery warning.
 
-1. Safari: open "index.html" in Safari and do "The main flow" above. Write down anything that looks broken or doesn't match.
-2. Reload: press Cmd+R. Everything you did should still be there.
-3. Grocery warning: go to "Meals", choose "Breakfast", open "Sausage and potato breakfast hash" and click "Plan". Put it on any day, then click "See grocery list". Pork sausage should be on the list, with a warning that names Jordan.
-4. Grayscale: open System Settings, then Accessibility, then Display, then Color Filters. Turn it on and choose Grayscale. Go to "Meals" and choose "Dinner". Look at the labels on the meal cards, then open "Cheesy spinach quesadillas" and scroll to the per-person check (it has a "Not safe" row). You should still be able to tell these four labels apart from their words and symbols alone:
+1. Open "index.html" in Chrome: right-click it, choose "Open With", then "Google Chrome". Do steps 1 to 4 of "The main flow".
+2. Grocery warning: go to "Meals", choose "Breakfast", open "Sausage and potato breakfast hash" and click "Plan". Put it on any day, then click "See grocery list". Pork sausage should be on the list, with a warning that names Jordan.
+3. Touch drag (phone mode): press Cmd+Option+I to open Chrome's developer tools, then press Cmd+Shift+M to switch to phone mode. Pick "iPhone 12 Pro" from the menu at the top of the page. Go to "Meals", open a meal labeled "Safe" and click "Plan". Drag its card from "Recipes to plan" onto a day, then to a different day, then back up onto the "Recipes to plan" area.
+   It passes when the meal lands where you let go and the page doesn't scroll instead of dragging. Press Cmd+Shift+M again to leave phone mode.
+4. Console: with the developer tools still open, click the "Console" tab. Click through every tab of the app and open a meal. There should be no red errors. Note any yellow warnings.
+5. Grayscale: open System Settings, then Accessibility, then Display, then Color Filters. Turn it on and choose Grayscale. Go to "Meals" and choose "Dinner". Look at the labels on the meal cards, then open "Cheesy spinach quesadillas" and scroll to the per-person check (it has a "Not safe" row). You should still be able to tell these four labels apart from their words and symbols alone:
    - Safe
    - Safe after a label check
    - Safe for X of Y with a fix
@@ -45,28 +47,27 @@ You're checking that the app works in Safari, and that the safety labels work wi
    Turn Color Filters off when you're done.
 
 
-## Makissa
+## Makissa (Safari)
 
-You're checking the weekly planner with real hands and with the keyboard.
+You're checking that the app works in Safari, and that you can use it with only the keyboard.
 
-1. Do "Step 0" on a phone, tablet or touchscreen laptop if you have one. Then do steps 1 to 4 of "The main flow" so the app has your fridge and meal ideas.
-2. Touch drag: open a meal labeled "Safe" and click "Plan". With your finger, drag the recipe card onto a day. Then drag it to a different day, then back up onto the "Recipes to plan" area.
-   It passes when the meal lands where you let go and the page doesn't scroll instead of dragging.
-3. Keyboard only: on a computer, don't touch the mouse. Use only Tab, Shift+Tab, Enter and Space to:
-   - get to "List" and then "Plan"
-   - press "Place…" on a recipe
+1. Open "index.html" in Safari: right-click it, choose "Open With", then "Safari". Do all of "The main flow". Write down anything that looks broken or doesn't match.
+2. Reload: press Cmd+R. Everything you did should still be there.
+3. Turn on full keyboard use in Safari first. Otherwise Tab skips buttons in every website, not just ours. Open the Safari menu, choose "Settings" (or "Preferences"), click "Advanced", and tick "Press Tab to highlight each item on a webpage".
+4. Keyboard only: don't touch the mouse or trackpad. Use only Tab, Shift+Tab, Return and Space to:
+   - get to "Meals", open a meal labeled "Safe" and press "Plan"
+   - press "Place…" on that recipe
    - choose a day and a meal, then press "Place here"
    - get to the grocery list
 
    It passes when you can always see which button you're on (it has an outline) and you never get stuck.
 
 
-## Kate
+## Kate (Windows)
 
 1. Firefox: install Firefox, open "index.html" in it, and do "The main flow".
-2. Console: in Chrome, press F12 and click the "Console" tab. Click through every tab of the app and open a meal. There should be no red errors. Note any yellow warnings.
-3. Grocery warning: do Eleanor's step 3 in Firefox.
-4. Timing: ask a friend who has never seen the app to open "index.html" and get to dinner ideas on their own. Start a timer when they double-click and stop it when meal ideas appear. Don't help them. It passes at under 3 minutes. Write down where they got stuck.
+2. Grocery warning: do Eleanor's step 2 in Firefox.
+3. Timing: ask a friend who has never seen the app to open "index.html" and get to dinner ideas on their own. Start a timer when they double-click and stop it when meal ideas appear. Don't help them. It passes at under 3 minutes. Write down where they got stuck.
 
 
 ## When you're done
