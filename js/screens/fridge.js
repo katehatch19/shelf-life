@@ -266,7 +266,9 @@ SL.screens.fridge = (function () {
 
     var blocked = unsure.length > 0;
     h += '<button type="button" class="btn btn-primary btn-block fr-continue" data-action="continue"' +
-      (blocked ? ' disabled aria-describedby="fr-continue-why"' : "") + ">See meal ideas</button>";
+      // aria-disabled, not disabled: the button stays in tab order so keyboard and
+      // screen-reader users can reach it and hear why it's blocked.
+      (blocked ? ' aria-disabled="true" aria-describedby="fr-continue-why"' : "") + ">See meal ideas</button>";
     if (blocked) {
       h += '<p class="small muted" id="fr-continue-why">Confirm or remove the ' + unsure.length +
         (unsure.length === 1 ? " item" : " items") + " above first.</p>";
@@ -322,6 +324,11 @@ SL.screens.fridge = (function () {
     if (a === "continue") {
       var unsure = (st.fridge || []).some(function (f) { return !f.confirmed; });
       if (!unsure) SL.app.go("#/meals");
+      else {
+        // Blocked: send focus to the first item that still needs confirming.
+        var next = current.container.querySelector("[data-action='confirm']");
+        if (next) next.focus();
+      }
     }
   }
 
