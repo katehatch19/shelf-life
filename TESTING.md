@@ -1,51 +1,80 @@
-# Shelf Life: hand check
+# Shelf Life: testing checklist
 
-This takes about 15 minutes. Each person takes the parts that match the device or browser they have, so nobody repeats work.
+Find your name below and follow only your section. It takes about 15 minutes.
 
-Most of [CLAUDE.md §6](CLAUDE.md#6-how-we-check-it-works) is already checked automatically in Chrome and Edge. This list covers what a script can't: other browsers, real hands, real keyboards, real eyes and real timing.
+You don't need GitHub skills or Claude Code for this. If anything is confusing or goes wrong, take a screenshot and send it to Kate in the team chat.
 
-## Before you start
 
-1. Get the latest version. Either pull the repo, or on GitHub click **Code → Download ZIP** and unzip it.
-2. Double-click `tests.html`. It should say **all checks passed**. If it doesn't, stop and report it.
-3. Double-click `index.html`. If you've used the app before, go to **Family → Reset demo data** first.
+## Step 0: Everyone does this first
 
-## Checks
+1. Open https://github.com/katehatch19/shelf-life in your browser (signed in to GitHub).
+2. Click the green "Code" button, then "Download ZIP".
+3. Open your Downloads folder and find the "shelf-life-main" folder. On a Mac, Safari unzips it for you. On Windows, right-click the zip and choose "Extract All".
+4. Inside that folder, double-click "tests.html". It should say: PASS: 42 of 42 checks passed. If it doesn't, stop and tell Kate.
+5. Double-click "index.html". That's the app.
 
-| # | Who | What to do | It passes when |
-|---|---|---|---|
-| 1 | **Mac, in Safari** | Follow "The main flow" below. Then reload the page. | Every step works, `tests.html` passes, and your data is still there after the reload. |
-| 2 | **Firefox** | The same as check 1. | The same as check 1. |
-| 3 | **Someone who has never seen the app** | Start a timer when they double-click `index.html`. Stop it when dinner ideas appear. Don't help them. | Under **3:00**. Write down where they hesitated. |
-| 4 | **Phone or touchscreen** | Go to **List → Plan** and drag a recipe from the tray onto a day with your finger. Then drag it to another day, then back onto the tray. | The meal lands where you dropped it. The page doesn't scroll instead of dragging. |
-| 5 | **Keyboard only** | Without the mouse, use only Tab, Shift+Tab, Enter and Space to plan a meal with **Place…**, then open the grocery list. | You can always see which button is focused, and you never get stuck. |
-| 6 | **Grayscale** | Windows: Settings → Accessibility → Color filters → Grayscale. Mac: System Settings → Accessibility → Display → Color filters. Look at Meals, a meal's detail and Recipes. | You can tell **Safe**, **Safe after a label check**, **Safe for X of Y with a fix** and **Not safe** apart by their words and icons alone. |
-| 7 | **Anyone, on a computer** | Press F12 (Mac: ⌥⌘I) → **Console**. Click through every tab and open a meal. | There are no red errors. Write down any yellow warnings. |
-| 8 | **Anyone** | After the main flow, with everyone eating, go to **Meals → Breakfast** → **Sausage hash** → **Plan**, and put it on a day. Open **List → Grocery**. | Pork sausage is on the list, with a label warning that names Jordan. |
 
-### The main flow (for checks 1 and 2)
+## The main flow (everyone uses some or all of this)
 
-1. Click **I understand**, then **Use the demo household**.
-2. **Snap fridge** → **Weeknight fridge**.
-3. Confirm the two dashed items, then **Continue**.
-4. In **Meals → Dinner**, open the **Chicken stir-fry** ("Safe for 2 of 3 with a fix") and tap the tamari swap. It should now say **Safe**.
-5. Tap **+** on the servings. The amounts, calories and cost should change right away.
-6. Tap **Plan**, then put the stir-fry on a day.
-7. Open **List → Grocery**. Nothing that's in your fridge should be on the list.
-8. Use **Share → Print** on a recipe. Only the recipe should print.
+Do these in order inside the app:
 
-## Reporting a problem
+1. Click "I understand".
+2. Click "Use the demo household".
+3. Click "Snap fridge", then pick "Weeknight fridge".
+4. Two items have a dashed border. Click "Confirm" on both, then "See meal ideas".
+5. Make sure "Dinner" is selected. Open "Chicken and broccoli stir-fry". Its label says "Safe for 2 of 3 with a fix".
+6. Click the button that starts with "Swap Soy sauce for...". The label should change to "Safe".
+7. Click "+" next to the servings. The amounts, calories and cost should all change right away.
+8. Click "Plan". Drag the stir-fry onto any day, or click "Place…" and then "Place here".
+9. Click "See grocery list". Nothing that's already in your fridge should be on the list.
 
-Open an issue on GitHub in the `shelf-life` repo (**Issues → New issue**) with:
 
-- **Check #** and **browser / device** (e.g. "Check 4, iPhone 15, Safari")
-- **What you did** (the clicks, in order)
-- **What you expected**
-- **What happened** (a screenshot or short video helps)
+## Eleanor (on your Mac)
 
-The owner of the screen picks it up (see [CLAUDE.md §5](CLAUDE.md#5-file-layout-and-owners)):
-- **Kate:** Family, Fridge and setup
-- **Makissa:** Meals and safety
-- **Eleanor:** Recipes, List and Share
+You're checking that the app works in Safari, and that the safety labels work without color.
 
-If everything passes, say so in the team chat with your check numbers and device.
+1. Safari: open "index.html" in Safari and do "The main flow" above. Write down anything that looks broken or doesn't match.
+2. Reload: press Cmd+R. Everything you did should still be there.
+3. Grocery warning: go to "Meals", choose "Breakfast", open "Sausage and potato breakfast hash" and click "Plan". Put it on any day, then click "See grocery list". Pork sausage should be on the list, with a warning that names Jordan.
+4. Grayscale: open System Settings, then Accessibility, then Display, then Color Filters. Turn it on and choose Grayscale. Go to "Meals" and choose "Dinner". Look at the labels on the meal cards, then open "Cheesy spinach quesadillas" and scroll to the per-person check (it has a "Not safe" row). You should still be able to tell these four labels apart from their words and symbols alone:
+   - Safe
+   - Safe after a label check
+   - Safe for X of Y with a fix
+   - Not safe
+
+   Turn Color Filters off when you're done.
+
+
+## Makissa
+
+You're checking the weekly planner with real hands and with the keyboard.
+
+1. Do "Step 0" on a phone, tablet or touchscreen laptop if you have one. Then do steps 1 to 4 of "The main flow" so the app has your fridge and meal ideas.
+2. Touch drag: open a meal labeled "Safe" and click "Plan". With your finger, drag the recipe card onto a day. Then drag it to a different day, then back up onto the "Recipes to plan" area.
+   It passes when the meal lands where you let go and the page doesn't scroll instead of dragging.
+3. Keyboard only: on a computer, don't touch the mouse. Use only Tab, Shift+Tab, Enter and Space to:
+   - get to "List" and then "Plan"
+   - press "Place…" on a recipe
+   - choose a day and a meal, then press "Place here"
+   - get to the grocery list
+
+   It passes when you can always see which button you're on (it has an outline) and you never get stuck.
+
+
+## Kate
+
+1. Firefox: install Firefox, open "index.html" in it, and do "The main flow".
+2. Console: in Chrome, press F12 and click the "Console" tab. Click through every tab of the app and open a meal. There should be no red errors. Note any yellow warnings.
+3. Grocery warning: do Eleanor's step 3 in Firefox.
+4. Timing: ask a friend who has never seen the app to open "index.html" and get to dinner ideas on their own. Start a timer when they double-click and stop it when meal ideas appear. Don't help them. It passes at under 3 minutes. Write down where they got stuck.
+
+
+## When you're done
+
+- If everything passed, post in the team chat: your name, your device, and "all passed".
+- If something failed, send Kate a screenshot plus one sentence on what you clicked and what happened. Or, if you're comfortable with GitHub, open the repo, click "Issues", then "New issue", and write the same thing.
+
+Who fixes what:
+- Kate: setup, Family, Fridge
+- Makissa: Meals and the safety labels
+- Eleanor: Recipes, the planner, the grocery list, Share
