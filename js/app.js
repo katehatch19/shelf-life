@@ -98,7 +98,18 @@ SL.app = (function () {
     else window.location.hash = h;
   }
 
+  /* Link the web app manifest (home-screen install on Android/Chrome) only on the
+     live site. From file:// the browser can't load it and would log an error. */
+  function linkManifest() {
+    if (!/^https?:$/.test(window.location.protocol)) return;
+    var l = document.createElement("link");
+    l.rel = "manifest";
+    l.href = "manifest.webmanifest";
+    document.head.appendChild(l);
+  }
+
   function boot() {
+    linkManifest();
     try { SL.store.rollWeek(); } catch (e) { if (window.console) console.error(e); }
     window.addEventListener("hashchange", route);
     route();

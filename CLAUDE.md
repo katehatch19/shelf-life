@@ -14,10 +14,11 @@ PRD.md is the source of truth for product behavior. If this file and the PRD dis
 4. **Nothing runs at load time except definitions.** A script file only defines `SL.*` objects and functions. No DOM work and no store reads or writes at load time. `js/app.js` boots on `DOMContentLoaded`. This lets `tests.html` load any logic file without side effects.
 5. **Mock data only.** All data lives in `data/*.js` files that assign plain objects to `SL.data`. No network calls of any kind.
 6. **State persists in localStorage** under the key `shelflife.v1`, through `js/store.js` only. Wrap every read and write in `try/catch`. If storage is unavailable the app still works and just forgets on reload. Stored state that won't parse or has the wrong `version` is replaced with a fresh state. The Family tab has a **Reset demo data** button (see 2.24).
-7. **Phone-first layout.** One centered column, at most 480px wide, with a fixed bottom tab bar. It must also work on a desktop browser.
-8. **In scope:** the core loop (profiles → fridge photo → safe meals → Recipe Keeper → grocery list), plus the weekly planner, recipe import, sharing and Report a problem.
-9. **Out of scope for the prototype:** barcode scanning (shown **locked**, see 2.9), receipt scanning, partner recipes, care cards, grocery delivery, real sign-in, multiple accounts, offline sync, AI recipe generation (AI recipes are canned entries in `data/recipes.js`). Do not build these.
-10. **One owner per file** (section 5). Change a file you don't own only with its owner's OK. Cross-file calls go through the public functions listed in section 4.3. Exception: `styles.css` has one marked section per screen file, and that screen's owner may edit their own section freely (see 5).
+7. **Live site and home screen.** The same files are served by GitHub Pages at https://katehatch19.github.io/shelf-life/ and can be added to a phone's home screen. `manifest.webmanifest` and `icons/` give it an app name, icon and full-screen mode. `js/app.js` links the manifest only over http(s), because from `file://` the browser can't load it and would log a console error. Every push to `main` updates the live site.
+8. **Phone-first layout.** One centered column, at most 480px wide, with a fixed bottom tab bar. It must also work on a desktop browser.
+9. **In scope:** the core loop (profiles → fridge photo → safe meals → Recipe Keeper → grocery list), plus the weekly planner, recipe import, sharing and Report a problem.
+10. **Out of scope for the prototype:** barcode scanning (shown **locked**, see 2.9), receipt scanning, partner recipes, care cards, grocery delivery, real sign-in, multiple accounts, offline sync, AI recipe generation (AI recipes are canned entries in `data/recipes.js`). Do not build these.
+11. **One owner per file** (section 5). Change a file you don't own only with its owner's OK. Cross-file calls go through the public functions listed in section 4.3. Exception: `styles.css` has one marked section per screen file, and that screen's owner may edit their own section freely (see 5).
 
 ---
 
@@ -350,6 +351,9 @@ js/app.js               Kate      router, tab bar, boot on DOMContentLoaded (loa
 tests.html              Makissa   in-browser checks (open by double-click)
 js/tests.js             Makissa   assertions for safety, list, scaling
 TESTING.md              Kate      hand-check list for teammates (other browsers, touch, keyboard, timing)
+manifest.webmanifest    Kate      home-screen app name, colors, icons (linked by app.js on the live site only)
+icons/                  Kate      app icons (apple-touch-icon.png, icon-192.png, icon-512.png, icon.svg source)
+.nojekyll               Kate      tells GitHub Pages to serve the files as-is
 ```
 
 **`styles.css`.** Kate owns the tokens and the shared component kit: card, buttons, the badges, chip, dashed unsure item, form rows, overlay, budget bar and print styles. Below them are sections marked `/* == screen: meals (Makissa) == */` and so on. Each screen's owner edits only their own section.
