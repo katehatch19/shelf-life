@@ -31,7 +31,6 @@ Shelf Life turns a photo of your fridge into meals that are safe for everyone at
 | Fridge scans per active user per week | ≥ 2 | The core habit |
 | Users reporting less food thrown away after 4 weeks | ≥ 60% | The waste promise |
 | Suggested meals flagged as unsafe by a user after cooking | 0 | The safety promise |
-| Free to Premium conversion | ≥ 5% | Business viability; 33% of surveyed people said they'd pay |
 
 ---
 
@@ -68,7 +67,6 @@ Shelf Life turns a photo of your fridge into meals that are safe for everyone at
 | U11 | plan the week's meals in advance, with leftovers | I can meal-prep | Should |
 | U12 | set a weekly budget and see cost per serving | I stay on budget | Should |
 | U13 | share a recipe, plan, list or care card with someone | others can use what the app made for me | Should |
-| U14 | scan a product's barcode to check its real ingredients and allergen warnings (Premium) | I get a specific answer instead of "check the label" | Should |
 | U15 | send a care card to a babysitter, grandparent or roommate | others know the food rules | Could |
 
 ### Core user flow
@@ -96,7 +94,7 @@ Profiles are set once. Each week, one fridge photo becomes meal ideas checked ag
 
 ## 3. Features and requirements
 
-The MVP is the weekly loop: profiles → fridge photo → safe meals → Recipe Keeper and plan → grocery list. **Everything is free except barcode scanning**, which is the only Premium feature.
+The MVP is the weekly loop: profiles → fridge photo → safe meals → Recipe Keeper and plan → grocery list. **Everything is free.** Barcode scanning was dropped: we don't think customers value it enough to pay for it.
 
 | Feature | Requirement | Stories | Release | Tier |
 |---|---|---|---|---|
@@ -108,7 +106,7 @@ The MVP is the weekly loop: profiles → fridge photo → safe meals → Recipe 
 | Safe meal suggestions | 3–5 ideas for breakfast, lunch, dinner or snacks from confirmed items; "Who's eating?" picker; badge: Safe / Safe after a label check / Safe for X of Y with a fix; "makes leftovers" tag | U2, U4 | MVP | Free |
 | Show your work | Per person, every ingredient checked and why it passes, fails or needs a label check | U4 | MVP | Free |
 | One-tap safe swap | Suggests a swap (e.g., tamari for soy sauce, oat milk for cheddar) and rechecks the meal | U5 | MVP | Free |
-| Remembered label checks | User taps "I checked the label" per item; the app remembers it and shows a warning to recheck when a new package of that item is added, or (with Premium) when the barcode shows a different product or manufacturer | U10 | MVP | Free |
+| Remembered label checks | User taps "I checked the label" per item; the app remembers it and shows a warning to recheck when a new package of that item is added | U10 | MVP | Free |
 | Recipe Keeper | Holds AI-suggested, partner and own recipes; folders, tags and search; servings scaling rescales ingredients, macros and cost; every recipe shows its source | U7 | MVP | Free |
 | Recipe import | From a link, pasted text or a photo of a cookbook page; becomes an editable recipe and gets a safety check | U8 | MVP | Free |
 | AI recipe creation and balancing | When no saved recipe fits, AI creates one from confirmed items and balances portions and macros as well as it can; labeled "AI-generated"; passes the same safety check as every recipe | U2, U6 | MVP | Free |
@@ -119,7 +117,6 @@ The MVP is the weekly loop: profiles → fridge photo → safe meals → Recipe 
 | Weekly grocery list | Planned meals minus what's in the fridge; label warnings per person; estimated total vs. budget | U9 | MVP | Free |
 | Sharing | Share recipes, plans, lists and care cards by link, text or print; no account needed to view | U13 | MVP | Free |
 | Report a problem | A button on every meal to report a safety or recipe problem | — | MVP | Free |
-| Barcode label scan | Scan a package to read its ingredients and allergen statements from a product database; marks it safe or unsafe for each person; alerts when the product or manufacturer changes | U14 | MVP | Premium |
 | Care card | Printable or shareable card with a person's restrictions, safe snacks and a contact name and number; no medical documents | U15 | V2 | Free |
 | Grocery delivery and store export | Send the list to Instacart, Walmart, Smith's (Kroger) or Costco; for stores without online ordering, such as Trader Joe's, export the list in aisle order | U9 | V2 | Free (referral revenue) |
 
@@ -130,7 +127,7 @@ The MVP is the weekly loop: profiles → fridge photo → safe meals → Recipe 
 - No meal is called "Safe" if any ingredient can't be confirmed; it shows "Safe after a label check" instead.
 - Ingredients, macros and cost update immediately when servings change.
 - The grocery list never includes an item the user confirmed is already in the fridge.
-- The free version gives a complete safety answer on its own; barcode scanning only makes label checks faster and more specific.
+- The app gives a complete safety answer on its own, using the user's own label checks.
 
 ---
 
@@ -140,7 +137,7 @@ The safety check is the reason people trust the app, so it is free for everyone 
 
 1. **Two levels per restriction.** A strict allergy means the ingredient is never used and "may contain" products are flagged. An intolerance or diet means the ingredient is left out.
 2. **Never guess.** A photo can't read ingredient labels. Any packaged item that can vary by brand (soy sauce, oats, bread, granola bars) is marked "check the label" until the user confirms it.
-3. **Remember checks, warn on change.** A confirmed label stays confirmed. When a new package of that item is added, or a barcode scan (Premium) shows a different product or manufacturer, the app shows a safety warning: "This may be a different product. Please check its label."
+3. **Remember checks, warn on change.** A confirmed label stays confirmed. When a new package of that item is added, the app shows a safety warning: "This may be a different product. Please check its label."
 4. **Show the reasoning.** Each meal lists, per person, every ingredient and why it passes, fails or needs a label check.
 5. **Hidden sources are known.** The ingredient database flags common hidden sources, such as wheat in soy sauce, malt in cereals, dairy in some breads and nuts in pesto.
 6. **Same check for every recipe.** AI-generated, partner and self-entered recipes all go through the same check. Recipes are not dietitian-reviewed; each one shows its source so users know where it came from.
@@ -177,12 +174,11 @@ The safety check is the reason people trust the app, so it is free for everyone 
 
 ## 6. Business model, pricing and channels
 
-Shelf Life is freemium. Two-thirds of surveyed people want a free app, so everything is free except barcode scanning. A third would pay, mostly $4–7.99 a month, which supports one Premium plan per household.
+Shelf Life is free. Two-thirds of surveyed people want a free app. We dropped barcode scanning, the planned Premium feature, because we don't think customers would pay for it. Revenue comes from referrals and partnerships for now; what (if anything) a paid plan should offer is an open question.
 
 | Revenue stream | Price | Who pays | Notes |
 |---|---|---|---|
-| Shelf Life Free | $0 | — | Everything except barcode scanning, including the full safety check and 10 photo scans a week |
-| Shelf Life Premium | $4.99/month or $39.99/year per household (to be validated) | Individuals and families | Barcode label scanning only |
+| Shelf Life | $0 | — | Everything, including the full safety check and 10 photo scans a week |
 | Grocery delivery referrals | Commission per order | Instacart, Walmart, Smith's (Kroger), Costco and others | When users send their list to a delivery service (V2) |
 | Partner recipes and allergy-friendly brands | Partnership or sponsorship | Recipe apps, publishers, brands | Clearly labeled; only products that pass a user's filters; never inside safety results (V2) |
 
@@ -192,10 +188,10 @@ Shelf Life is freemium. Two-thirds of surveyed people want a free app, so everyt
 
 - **Awareness:** TikTok and Instagram videos of "photo of my fridge → dinner" and "one meal for the whole table"; celiac, allergy and parent communities online.
 - **Trust:** registered dietitians and allergists recommending it to patients.
-- **Evaluation:** free tier, no card required.
-- **Purchase:** App Store and Google Play in-app subscription.
+- **Evaluation:** free, no card required.
+- **Download:** App Store and Google Play.
 - **Retention:** use-first reminders, weekly list reminder, saved meals.
-- **Referral:** invite a household member or roommate, both get a free month of Premium.
+- **Referral:** invite a household member or roommate (reward to be decided).
 
 ---
 
@@ -210,15 +206,13 @@ Shelf Life is freemium. Two-thirds of surveyed people want a free app, so everyt
 | A wrong suggestion causes an allergic reaction | Low, but severe | Never-guess rule, label checks and change warnings, same check for every recipe source, clear disclaimer, legal review before launch |
 | AI recipes are poorly balanced or don't work | Medium | Label AI recipes; let users rate and edit them; favor saved and partner recipes when they fit |
 | Photo scan misses or misreads items | High | Confirm screen before any meal is suggested; dashed "unsure" items; receipt and manual entry |
-| Barcode database is incomplete or out of date | Medium | Fall back to "check the label"; let users report wrong products |
 | Users drop off after the first week, as with most health apps | High | Use-first reminders, Recipe Keeper, weekly plan and list as a habit; track day-30 retention |
 | Free users cost money through AI scans | Medium | 10 free photo scans a week; cache results |
-| Few people pay for barcode scanning alone | Medium | Referral and partnership revenue; test the price before launch |
+| No paid plan means revenue depends on referrals and partnerships | Medium | Launch grocery delivery referrals (V2) early; test whether any feature is worth paying for |
 | Larger apps copy the fridge scan | Medium | Own the trust position: free per-person safety check with shown reasoning |
 
 ### Open questions
 
-- Is $4.99/month per household the right price for barcode scanning alone?
-- Which product database powers barcode scanning, and what does it cost?
+- Is there a feature customers would pay for, and should there be a paid plan at all?
 - Which recipe apps or publishers do we partner with first?
 - Is the name "Shelf Life" available on the App Store and as a US trademark?

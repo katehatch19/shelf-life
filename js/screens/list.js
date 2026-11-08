@@ -110,6 +110,8 @@ SL.screens.list = (function () {
   var MEAL_NAMES = { breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack" };
   var DISCLAIMER = "Shelf Life helps you plan but is not medical advice; always read product labels.";
   var DRAG_PX = 6;
+  var EDGE_PX = 80;      // auto-scroll zone at the top and bottom of the screen while dragging
+  var MAX_SCROLL = 18;   // px per frame at the very edge
 
   var view = { container: null, params: null };
   var ui = { picker: null, msg: null, budgetMsg: null };   // picker: { from: "tray"|"slot", recipeId, key, returnFk }
@@ -460,9 +462,15 @@ SL.screens.list = (function () {
       drag.src.classList.add("ls-dragging");
     }
     e.preventDefault();
+    drag.x = e.clientX; drag.y = e.clientY;
     drag.ghost.style.left = (e.clientX - drag.offX) + "px";
     drag.ghost.style.top = (e.clientY - drag.offY) + "px";
-    var t = targetAt(e.clientX, e.clientY);
+    updateOver();
+    if (!drag.raf) drag.raf = window.requestAnimationFrame(autoScroll);
+  }
+
+  function updateOver() {
+    var t = targetAt(drag.x, drag.y);
     if (t !== drag.over) {
       if (drag.over) drag.over.classList.remove("ls-over");
       drag.over = t;
@@ -470,11 +478,30 @@ SL.screens.list = (function () {
     }
   }
 
+  // The page can't scroll by touch while a card is held, so scroll it for the
+  // user when the pointer sits near the top or bottom edge (above the tab bar).
+  function autoScroll() {
+    if (!drag || !drag.active) return;
+    drag.raf = 0;
+    var bar = document.querySelector(".tabbar");
+    var bottom = bar ? bar.getBoundingClientRect().top : window.innerHeight;
+    var step = 0;
+    if (drag.y > bottom - EDGE_PX) step = Math.min(1, (drag.y - (bottom - EDGE_PX)) / EDGE_PX);
+    else if (drag.y < EDGE_PX) step = -Math.min(1, (EDGE_PX - drag.y) / EDGE_PX);
+    if (!step) return;
+    var before = window.pageYOffset;
+    window.scrollBy(0, Math.ceil(Math.abs(step) * MAX_SCROLL) * (step < 0 ? -1 : 1));
+    if (window.pageYOffset === before) return;   // already at the top or bottom
+    updateOver();
+    drag.raf = window.requestAnimationFrame(autoScroll);
+  }
+
   function endDrag() {
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerup", onPointerUp);
     window.removeEventListener("pointercancel", onPointerCancel);
     if (drag) {
+      if (drag.raf) window.cancelAnimationFrame(drag.raf);
       if (drag.ghost && drag.ghost.parentNode) drag.ghost.parentNode.removeChild(drag.ghost);
       if (drag.over) drag.over.classList.remove("ls-over");
       if (drag.src) drag.src.classList.remove("ls-dragging");

@@ -15,8 +15,8 @@ SL.screens.meals = (function () {
 
   var mealType = null;      // chosen meal tab, kept in-module
   var current = null;       // { container, params }
-  var flash = "";           // one-shot status message (Cooked, etc.)
-  var barcodeOpen = false;  // locked barcode note visible
+  var flash = "";           // one-shot status message (Save, swaps, etc.)
+  var cookedNote = "";      // one-shot message shown under the Cooked button
   var workOpen = false;     // "Show your work" expanded
 
   function esc(s) { return SL.util.esc(s); }
@@ -301,7 +301,6 @@ SL.screens.meals = (function () {
       '<button type="button" class="btn btn-primary" data-act="save" data-focus="save"' + dis +
         ' aria-pressed="' + saved + '">' + (saved ? "Saved" : "Save") + "</button>" +
       '<button type="button" class="btn btn-secondary" data-act="plan" data-focus="plan"' + dis + ">Plan</button>" +
-      '<button type="button" class="btn btn-secondary" data-act="cooked" data-focus="cooked"' + dis + ">Cooked</button>" +
       '<button type="button" class="btn btn-text" data-act="share" data-focus="share">Share</button>' +
       '<button type="button" class="btn btn-text" data-act="report" data-focus="report">Report a problem</button>' +
       "</div></section>";
@@ -362,11 +361,6 @@ SL.screens.meals = (function () {
       if (unknownLabel) {
         h += '<p class="small">Some lines aren\'t recognized. Edit them in Recipes to pick a known ingredient.</p>';
       }
-      h += '<button type="button" class="btn btn-text btn-locked" data-act="barcode" data-focus="barcode"' +
-        ' aria-label="Scan barcode, Premium, locked" aria-expanded="' + barcodeOpen + '">Scan barcode · Premium</button>';
-      if (barcodeOpen) {
-        h += '<p class="small muted">Barcode scanning isn\'t in this prototype. Check the label by hand, then tap "I checked the label".</p>';
-      }
       h += "</section>";
     }
 
@@ -397,6 +391,15 @@ SL.screens.meals = (function () {
     });
     h += "</details>";
 
+    /* cooked: sits after the steps, because you tap it once you've made the meal */
+    h += '<section class="card ml-cooked" aria-labelledby="ml-cooked-h"><h2 id="ml-cooked-h">Done cooking?</h2>' +
+      '<p class="small muted">Tap Cooked and we\'ll take the ingredients you used out of your fridge. Pantry staples stay.</p>';
+    if (anyFail) h += '<p id="ml-why-cooked" class="ml-why"><span aria-hidden="true">↻ </span>Apply the swap first.</p>';
+    h += '<button type="button" class="btn btn-primary btn-block" data-act="cooked" data-focus="cooked"' +
+      (anyFail ? ' aria-disabled="true" aria-describedby="ml-why-cooked"' : "") + ">Cooked</button>" +
+      '<p class="ml-cooked__note" role="status" aria-live="polite">' + (cookedNote ? esc(cookedNote) : "") + "</p></section>";
+    cookedNote = "";
+
     h += '<p class="disclaimer">' + esc(DISCLAIMER) + "</p></article>";
     container.innerHTML = h;
   }
@@ -416,7 +419,8 @@ SL.screens.meals = (function () {
     if (!id) return;
 
     if (btn.getAttribute("aria-disabled") === "true") {
-      if (act === "save" || act === "plan" || act === "cooked") { flash = "Apply the swap first."; save(null); }
+      if (act === "cooked") { cookedNote = "Apply the swap first."; save(null); }
+      else if (act === "save" || act === "plan") { flash = "Apply the swap first."; save(null); }
       return;
     }
 
@@ -445,9 +449,6 @@ SL.screens.meals = (function () {
       });
       flash = "Label confirmed for " + ingName(iid) + ".";
       save({ labelChecks: checks, fridge: fridge });
-    } else if (act === "barcode") {
-      barcodeOpen = !barcodeOpen;
-      save(null);
     } else if (act === "save") {
       var ids = (state.savedRecipeIds || []).slice();
       var at = ids.indexOf(id);
@@ -469,7 +470,7 @@ SL.screens.meals = (function () {
       before.forEach(function (f) {
         if (used.indexOf(f.ingredientId) >= 0 && removed.indexOf(f.ingredientId) < 0) removed.push(f.ingredientId);
       });
-      flash = removed.length
+      cookedNote = removed.length
         ? "Enjoy! We took " + joinNames(removed.map(ingName)) + " out of your fridge."
         : "Enjoy! None of these items were in your fridge.";
       save({ fridge: after });
@@ -503,7 +504,7 @@ SL.screens.meals = (function () {
     }
     current = { container: container, params: params || { page: "meals", parts: [] } };
     flash = "";
-    barcodeOpen = false;
+    cookedNote = "";
     workOpen = false;
     draw(container, current.params);
   }

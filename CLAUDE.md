@@ -17,7 +17,7 @@ PRD.md is the source of truth for product behavior. If this file and the PRD dis
 7. **Live site and home screen.** The same files are served by GitHub Pages at https://katehatch19.github.io/shelf-life/ and can be added to a phone's home screen. `manifest.webmanifest` and `icons/` give it an app name, icon and full-screen mode. `js/app.js` links the manifest only over http(s), because from `file://` the browser can't load it and would log a console error. Every push to `main` updates the live site.
 8. **Phone-first layout.** One centered column, at most 480px wide, with a fixed bottom tab bar. It must also work on a desktop browser.
 9. **In scope:** the core loop (profiles → fridge photo → safe meals → Recipe Keeper → grocery list), plus the weekly planner, recipe import, sharing and Report a problem.
-10. **Out of scope for the prototype:** barcode scanning (shown **locked**, see 2.9), receipt scanning, partner recipes, care cards, grocery delivery, real sign-in, multiple accounts, offline sync, AI recipe generation (AI recipes are canned entries in `data/recipes.js`). Do not build these.
+10. **Out of scope for the prototype:** barcode scanning (dropped from the product, see PRD §3), receipt scanning, partner recipes, care cards, grocery delivery, real sign-in, multiple accounts, offline sync, AI recipe generation (AI recipes are canned entries in `data/recipes.js`). Do not build these.
 11. **One owner per file** (section 5). Change a file you don't own only with its owner's OK. Cross-file calls go through the public functions listed in section 4.3. Exception: `styles.css` has one marked section per screen file, and that screen's owner may edit their own section freely (see 5).
 
 ---
@@ -58,7 +58,6 @@ PRD.md is the source of truth for product behavior. If this file and the PRD dis
 9. **Recheck after every change:** swaps, servings, edits, imports, label checks and changes to who's eating.
 10. **Remembered label checks.** "I checked the label" is stored per ingredient in `state.labelChecks` and applies to **every person**. It turns that ingredient's label rows into pass and stays confirmed.
     - **New package.** Whenever an ingredient that has a `labelChecks` entry is added to the fridge again, by a scan or by typing, its fridge item gets `newPackage: true`. While `newPackage` is true, `checkMeal` ignores the stored check, so the ingredient is a label row again. The item and every meal using it show *"This may be a different product. Please check its label."* until the user re-confirms. Re-confirming sets `labelChecks[id]` to today and `newPackage` to false.
-    - **Barcode is locked.** Barcode scanning appears as a locked **"Scan barcode · Premium"** button that opens a note saying it isn't in this prototype. It never blocks or replaces a manual check.
 11. **No paid placement near safety.** Nothing sponsored appears in results or swaps. The prototype has no sponsored content at all.
 12. **Disclaimer** on setup, on meal detail, on recipe detail and as a one-line footer under the suggestion list: *Shelf Life helps you plan but is not medical advice; always read product labels.*
 13. **Safety status is never shown by color alone.** Every badge has text and an icon. Badge markup comes only from `SL.util.badgeHTML(check)`.
@@ -126,7 +125,7 @@ Target: from opening the app to safe meal ideas in under 3 minutes.
 | `#/fridge/scan` | Pick one of the sample fridges | fridge.js |
 | `#/fridge/confirm` | Scan result; dashed unsure items must be confirmed or removed | fridge.js |
 | `#/meals` | Meal-type tabs + "Who's eating?" + 3–5 suggestions with badges | meals.js |
-| `#/meals/:recipeId` | Meal detail: show-your-work per person, swaps, servings, macros, cost, disclaimer, Save / Plan / Cooked / Share / Report | meals.js |
+| `#/meals/:recipeId` | Meal detail: Save / Plan / Share / Report at the top; swaps, servings, macros, cost, steps, show-your-work per person; **Cooked** after the steps; disclaimer | meals.js |
 | `#/recipes` | Recipe Keeper: folders, tags, search | recipes.js |
 | `#/recipes/:recipeId` | Recipe detail/edit with servings scaling and safety summary | recipes.js |
 | `#/recipes/import` | Import from link, pasted text or cookbook photo (mocked) | recipes.js |
@@ -139,7 +138,7 @@ Target: from opening the app to safe meal ideas in under 3 minutes.
 Unknown routes go to `#/fridge` (or `#/setup` if there are no profiles). The share sheet and the report form are overlays, not routes.
 
 **Planning a meal (drag, per PRD §3).** The planner shows a grid of this week's days × breakfast/lunch/dinner/snack, and a **tray** of recipes to drag from. The tray holds the Keeper's recipes, plus any recipe sent from meal detail.
-- **Drag with Pointer Events** (`pointerdown`/`pointermove`/`pointerup`), not the HTML5 drag-and-drop API, which doesn't work reliably with touch on phones. Set `touch-action: none` on draggable cards. While dragging, highlight the cell under the pointer.
+- **Drag with Pointer Events** (`pointerdown`/`pointermove`/`pointerup`), not the HTML5 drag-and-drop API, which doesn't work reliably with touch on phones. Set `touch-action: none` on draggable cards. While dragging, highlight the cell under the pointer. Holding a card near the top or bottom edge of the screen (above the tab bar) scrolls the page, so a meal can be dragged to any day, Sunday included.
 - **What a drag can do.** Drag a tray recipe onto a cell to plan it. Drag a planned slot to another cell to move it, or back onto the tray to remove it.
 - **Keyboard and accessibility alternative (required, WCAG 2.5.7).** Every tray card and planned slot also has a **"Place…"** button. It opens a day + meal picker that does the same thing as a drop, so tab order and screen readers reach every action.
 - **Plan from meal detail.** "Plan" on meal detail goes to `#/list/plan/<recipeId>`, which shows that recipe at the top of the tray, highlighted.

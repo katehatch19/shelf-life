@@ -146,7 +146,6 @@ body.no-tabbar .app { padding-bottom: 32px; }
 .btn[disabled], .btn[aria-disabled="true"] {
   background: var(--surface-2); color: var(--muted); border-color: var(--line); cursor: not-allowed;
 }
-.btn-locked::after { content: " 🔒"; }
 
 /* ---------- badges (markup only from SL.util.badgeHTML) ---------- */
 .badge {
@@ -303,8 +302,6 @@ body.has-overlay { overflow: hidden; }
 .fam-person .row { margin-top: 4px; }
 .fam-labels { list-style: none; padding: 0; margin: 0 0 12px; }
 .fam-warning { margin: 8px 0; }
-.fam-barcode { margin-top: 4px; }
-.fam-note { margin-top: 10px; background: var(--surface-2); }
 .fam-budget { flex-wrap: nowrap; }
 .fam-budget input { flex: 1 1 auto; max-width: 160px; }
 .fam-dollar { font-weight: 700; font-size: 1.1rem; }
@@ -365,6 +362,9 @@ body.has-overlay { overflow: hidden; }
 .ml-swap .small { margin: 6px 0 0; }
 .ml-actions { margin: 0 0 16px; }
 .ml-why { font-weight: 650; color: var(--fix); margin: 0 0 8px; }
+.ml-cooked .small { margin: 0 0 10px; }
+.ml-cooked__note { margin: 8px 0 0; font-weight: 650; }
+.ml-cooked__note:empty { display: none; }
 .ml-stepper { display: inline-flex; align-items: center; gap: 8px; }
 .ml-step { min-width: 44px; padding: 6px 12px; font-size: 1.2rem; }
 .ml-serv { min-width: 6.5em; text-align: center; font-weight: 650; }

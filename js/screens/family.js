@@ -28,7 +28,6 @@ SL.screens.family = (function () {
   var editing = null;             // profile id, or "new-child"
   var confirmRemove = null;       // profile id
   var confirmReset = false;
-  var barcodeNote = false;
   var flash = "";
   var formError = "";
 
@@ -233,7 +232,6 @@ SL.screens.family = (function () {
     formError = "";
     confirmReset = false;
     confirmRemove = null;
-    barcodeNote = false;
     editing = null;
     mount(container, params);
   }
@@ -360,12 +358,6 @@ SL.screens.family = (function () {
       });
       h += "</ul>";
     }
-    h += '<button type="button" class="btn btn-secondary btn-locked fam-barcode" data-action="barcode" aria-label="Scan barcode, Premium, locked" aria-expanded="' + (barcodeNote ? "true" : "false") + '" aria-controls="fam-barcode-note">Scan barcode · Premium</button>';
-    if (barcodeNote) {
-      h += '<div class="card fam-note" id="fam-barcode-note" role="note"><p><strong>Barcode scanning isn\'t in this prototype.</strong> ' +
-        "It's a Premium feature. It never replaces your own check: read the label and tap \"I checked the label\".</p>" +
-        '<button type="button" class="btn btn-text" data-action="barcode-close">Close note</button></div>';
-    }
     h += "</section>";
 
     // Budget
@@ -462,8 +454,6 @@ SL.screens.family = (function () {
         flash = "Label confirmed for " + tagName("custom:" + id) + ".";
         refresh();
         break;
-      case "barcode": barcodeNote = !barcodeNote; refresh(barcodeNote ? "#fam-barcode-note [data-action]" : ".fam-barcode"); break;
-      case "barcode-close": barcodeNote = false; refresh(".fam-barcode"); break;
       case "reset": confirmReset = true; refresh("[data-action='reset-yes']"); break;
       case "reset-no": confirmReset = false; refresh("[data-action='reset']"); break;
       case "reset-yes":
