@@ -52,7 +52,7 @@ PRD.md is the source of truth for product behavior. If this file and the PRD dis
    **When a meal counts as fixable.** For each failing ingredient, `fixes` holds the first swap in `data/swaps.js` order whose `from` is that ingredient and whose `fixes` cover every failing tag for every eater on it. A `custom:` avoid fail is covered by any swap away from that ingredient. The meal is `fixable` only if every failing ingredient has such a swap and, after applying all of them, `checkMeal` returns `safe` or `label`. Otherwise it is `unsafe` and is **not suggested** (PRD goal 3).
 
    Recipe detail in the Keeper may show an `unsafe` recipe as **✕ Not safe for <names>**. This is the only red in the app.
-6. **Show your work.** Each meal's detail shows, for each person, every ingredient with `pass`, `fail` or `label` and a plain-language reason (e.g. "Soy sauce usually contains wheat. Jordan has celiac."). A person with no restrictions gets pass rows reading "Sam has no food restrictions." All reason text is written in `js/safety.js`.
+6. **Show your work.** Each meal's detail shows, for each person, every ingredient with `pass`, `fail` or `label` and a plain-language reason (e.g. "Soy sauce usually contains wheat. Jordan has celiac."). A person with no restrictions gets pass rows reading "Sam has no food restrictions." All reason text is written in `js/safety.js`. On meal detail it sits below the steps as one collapsed line that opens on tap.
 7. **Hidden sources are known.** The ingredient data flags them through `hiddenSourceNote`, e.g. wheat in soy sauce, malt in cereal, dairy in some bread, nuts in pesto.
 8. **One-tap safe swap.** Swaps come only from `data/swaps.js`. Applying a swap **rechecks** the meal. While any eater has a fail, **Save, Plan and Cooked are disabled** with the note "Apply the swap first."
 9. **Recheck after every change:** swaps, servings, edits, imports, label checks and changes to who's eating.
@@ -117,7 +117,7 @@ Hash-based routing (works on `file://`), handled only by `js/app.js`.
 
 Target: from opening the app to safe meal ideas in under 3 minutes.
 
-**Bottom tab bar (always visible after setup):** Fridge · Meals · Recipes · List · Family
+**Bottom tab bar (always visible after setup):** Fridge · Meals · Recipes · Shopping · Family (the Shopping tab uses the `#/list` routes)
 
 | Route | Screen | Owner file |
 |---|---|---|

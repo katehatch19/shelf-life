@@ -6,7 +6,7 @@ SL.screens = SL.screens || {};
 
 SL.app = (function () {
   var PAGES = { setup: "family", family: "family", fridge: "fridge", meals: "meals", recipes: "recipes", list: "list" };
-  var TITLES = { setup: "Welcome", family: "Family", fridge: "Fridge", meals: "Meals", recipes: "Recipes", list: "List" };
+  var TITLES = { setup: "Welcome", family: "Family", fridge: "Fridge", meals: "Meals", recipes: "Recipes", list: "Shopping" };
 
   function parse(hash) {
     var h = String(hash || "").replace(/^#?\/?/, "");

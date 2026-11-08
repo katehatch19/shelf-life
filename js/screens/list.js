@@ -112,7 +112,7 @@ SL.screens.list = (function () {
   var DRAG_PX = 6;
 
   var view = { container: null, params: null };
-  var ui = { picker: null, msg: null };   // picker: { from: "tray"|"slot", recipeId, key, returnFk }
+  var ui = { picker: null, msg: null, budgetMsg: null };   // picker: { from: "tray"|"slot", recipeId, key, returnFk }
   var drag = null;
 
   function esc(t) { return SL.util.esc(t); }
@@ -393,6 +393,21 @@ SL.screens.list = (function () {
     if (res) refresh();
   }
 
+  function onBudgetSubmit(e) {
+    if (!e.target.getAttribute || e.target.getAttribute("data-form") !== "budget") return;
+    e.preventDefault();
+    var raw = (view.container.querySelector("#ls-budget-input") || {}).value;
+    var n = Number(raw);
+    if (raw === "" || raw == null || !isFinite(n) || n < 0) {
+      ui.budgetMsg = { ok: false, text: "Enter a dollar amount of 0 or more." };
+      refresh("budget-input");
+      return;
+    }
+    SL.store.set({ budgetUSD: Math.round(n * 100) / 100 });
+    ui.budgetMsg = { ok: true, text: "Budget saved." };
+    refresh("budget-save");
+  }
+
   function onPickerSubmit(e) {
     if (!e.target.classList || !e.target.classList.contains("ls-picker")) return;
     e.preventDefault();
@@ -505,7 +520,16 @@ SL.screens.list = (function () {
       '<div class="budget-bar__fill" style="width:' + pct + '%"></div></div>' +
       (over ? '<p class="budget-over ls-budget-note">Over budget by ' + money(total - budget) + "</p>"
             : '<p class="ls-budget-note muted">' + money(budget - total) + " left this week (estimate)</p>") +
+      '<form class="row ls-budget-form" data-form="budget" novalidate>' +
+      '<label for="ls-budget-input">Weekly budget</label>' +
+      '<span class="ls-dollar" aria-hidden="true">$</span>' +
+      '<input type="number" id="ls-budget-input" data-fk="budget-input" min="0" step="1" inputmode="decimal" value="' + esc(budget) + '"' +
+      (ui.budgetMsg && !ui.budgetMsg.ok ? ' aria-invalid="true" aria-describedby="ls-budget-msg"' : "") + ">" +
+      '<button type="submit" class="btn btn-secondary" data-fk="budget-save">Save</button></form>' +
+      (ui.budgetMsg ? '<p id="ls-budget-msg" class="small ' + (ui.budgetMsg.ok ? "muted" : "error") + '" role="' + (ui.budgetMsg.ok ? "status" : "alert") + '">' +
+        esc(ui.budgetMsg.text) + "</p>" : "") +
       "</section>";
+    ui.budgetMsg = null;
 
     if (!built.items.length) {
       html += '<section class="card ls-empty"><h2>' + (planned ? "You have everything" : "Nothing to buy yet") + "</h2>" +
@@ -546,7 +570,7 @@ SL.screens.list = (function () {
   /* ---------- entry ---------- */
 
   function render(container, params) {
-    ui.picker = null; ui.msg = null;
+    ui.picker = null; ui.msg = null; ui.budgetMsg = null;
     draw(container, params);
   }
 
@@ -557,6 +581,7 @@ SL.screens.list = (function () {
     container.innerHTML = "";
     container.appendChild(c);
     c.addEventListener("submit", onPickerSubmit);
+    c.addEventListener("submit", onBudgetSubmit);
     var state = SL.store.get();
     var parts = (params && params.parts) || [];
     if (parts[0] === "plan") renderPlan(c, state, parts[1] || null);

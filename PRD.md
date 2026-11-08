@@ -152,7 +152,7 @@ The safety check is the reason people trust the app, so it is free for everyone 
 
 ## 5. Look, feel and non-functional requirements
 
-**Look.** Calm and clean, following the team prototype: soft off-white background, deep green for primary actions, amber for "check the label" and red only for "not safe." Large headings, rounded cards and one main action per screen. Five tabs: Fridge, Meals, Recipes, List, Family.
+**Look.** Calm and clean, following the team prototype: soft off-white background, deep green for primary actions, amber for "check the label" and red only for "not safe." Large headings, rounded cards and one main action per screen. Five tabs: Fridge, Meals, Recipes, Shopping, Family.
 
 **Feel.** Trustworthy and reassuring. The app never hides uncertainty ("Until then we don't call it safe") and never shames users for wasted food.
 

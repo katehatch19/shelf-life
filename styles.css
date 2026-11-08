@@ -387,6 +387,10 @@ body.has-overlay { overflow: hidden; }
 .ml-res { font-weight: 700; }
 .ml-reason { display: block; font-size: .9rem; color: var(--muted); }
 .ml-few p { margin-bottom: 8px; }
+.ml-work { margin: 12px 0; font-size: .9rem; }
+.ml-work > summary { cursor: pointer; color: var(--muted); padding: 10px 0; min-height: 24px; }
+.ml-work[open] { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0 12px 12px; }
+.ml-work h3 { font-size: 1rem; }
 @media (max-width: 380px) { .ml-macros { grid-template-columns: repeat(2, 1fr); } }
 
 /* == screen: recipes (Eleanor) == */
@@ -433,6 +437,10 @@ body.has-overlay { overflow: hidden; }
 
 
 /* == screen: list (Eleanor) == */
+.ls-budget-form { flex-wrap: nowrap; align-items: center; gap: 6px; margin-top: 10px; }
+.ls-budget-form label { font-weight: 650; margin-right: 4px; white-space: nowrap; }
+.ls-budget-form input { flex: 1 1 auto; min-width: 0; max-width: 120px; }
+.ls-dollar { font-weight: 700; }
 .ls-tabs { display: flex; gap: 8px; margin: 0 0 14px; border-bottom: 1px solid var(--line); }
 .ls-tab {
   display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 14px;

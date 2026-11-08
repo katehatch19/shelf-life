@@ -17,6 +17,7 @@ SL.screens.meals = (function () {
   var current = null;       // { container, params }
   var flash = "";           // one-shot status message (Cooked, etc.)
   var barcodeOpen = false;  // locked barcode note visible
+  var workOpen = false;     // "Show your work" expanded
 
   function esc(s) { return SL.util.esc(s); }
   function ings() { return (SL.data && SL.data.ingredients) || {}; }
@@ -369,8 +370,13 @@ SL.screens.meals = (function () {
       h += "</section>";
     }
 
-    /* show your work */
-    h += '<section class="card ml-work" aria-labelledby="ml-work-h"><h2 id="ml-work-h">Show your work</h2>';
+    /* steps */
+    h += '<section class="card" aria-labelledby="ml-steps-h"><h2 id="ml-steps-h">Steps</h2><ol class="ml-steps">';
+    (recipe.steps || []).forEach(function (s) { h += "<li>" + esc(s) + "</li>"; });
+    h += "</ol></section>";
+
+    /* show your work: one collapsed line; tap to see every row (CLAUDE.md 2.6) */
+    h += '<details class="ml-work"' + (workOpen ? " open" : "") + '><summary data-focus="work"><span aria-hidden="true">🔍 </span>Show your work: safety check for each person</summary>';
     (check.people || []).forEach(function (p) {
       var name = personName(state, p.personId);
       var st = p.status === "fail" ? { cls: "fail", icon: "✕", text: "Not safe yet" }
@@ -389,12 +395,7 @@ SL.screens.meals = (function () {
       });
       h += "</ul></div>";
     });
-    h += "</section>";
-
-    /* steps */
-    h += '<section class="card" aria-labelledby="ml-steps-h"><h2 id="ml-steps-h">Steps</h2><ol class="ml-steps">';
-    (recipe.steps || []).forEach(function (s) { h += "<li>" + esc(s) + "</li>"; });
-    h += "</ol></section>";
+    h += "</details>";
 
     h += '<p class="disclaimer">' + esc(DISCLAIMER) + "</p></article>";
     container.innerHTML = h;
@@ -481,6 +482,10 @@ SL.screens.meals = (function () {
     }
   }
 
+  function onToggle(e) {
+    if (e.target && e.target.classList && e.target.classList.contains("ml-work")) workOpen = e.target.open;
+  }
+
   function draw(container, params) {
     var parts = (params && params.parts) || [];
     if (parts.length) renderDetail(container, parts[0]);
@@ -490,11 +495,16 @@ SL.screens.meals = (function () {
   function render(container, params) {
     if (current && current.container && current.container !== container) {
       current.container.removeEventListener("click", onClick);
+      current.container.removeEventListener("toggle", onToggle, true);
     }
-    if (!current || current.container !== container) container.addEventListener("click", onClick);
+    if (!current || current.container !== container) {
+      container.addEventListener("click", onClick);
+      container.addEventListener("toggle", onToggle, true);
+    }
     current = { container: container, params: params || { page: "meals", parts: [] } };
     flash = "";
     barcodeOpen = false;
+    workOpen = false;
     draw(container, current.params);
   }
 

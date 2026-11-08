@@ -92,7 +92,7 @@ SL.screens.fridge = (function () {
     if (!f) f = root.querySelector("h1");
     if (f) {
       if (!f.hasAttribute("tabindex") && /^H\d$/.test(f.tagName)) f.setAttribute("tabindex", "-1");
-      try { f.focus(); } catch (e) { /* ignore */ }
+      try { f.focus({ preventScroll: true }); } catch (e) { try { f.focus(); } catch (e2) { /* ignore */ } }
     }
   }
 
@@ -292,7 +292,8 @@ SL.screens.fridge = (function () {
     if (a === "remove") {
       SL.store.set({ fridge: (st.fridge || []).filter(function (f) { return f.ingredientId !== id; }) });
       flash = "Removed " + nameOf(id) + ".";
-      refresh(sub(current.params) === "confirm" ? "[data-action='confirm'], .fr-continue" : "#fr-add-input");
+      // Not the add box: focusing it pops open the browser's suggestion list.
+      refresh(sub(current.params) === "confirm" ? "[data-action='confirm'], .fr-continue" : null);
       return;
     }
 
@@ -358,7 +359,8 @@ SL.screens.fridge = (function () {
     addError = "";
     addValue = "";
     flash = "Added " + nameOf(id) + ".";
-    refresh("#fr-add-input");
+    // Focus the heading, not the add box, so the suggestion list doesn't pop open.
+    refresh(null);
   }
 
   return {
