@@ -491,6 +491,7 @@ body.has-overlay { overflow: hidden; }
 .ls-aisle__h { font-size: 1.1rem; }
 .ls-aisle__list { list-style: none; padding: 0; margin: 0; }
 .ls-cost { white-space: nowrap; font-weight: 650; }
+.ls-pack { margin: 2px 0 0; }
 .ls-warn { margin: 8px 0 0; }
 
 

@@ -420,7 +420,7 @@ SL.tests = (function () {
     ok(Array.isArray(res.items), "items"); ok(typeof res.totalUSD === "number", "totalUSD");
     eq(res.budgetUSD, 75);
     var it = item(res, "carrot");
-    ["ingredientId", "aisle", "amount", "unit", "costUSD", "warnings"].forEach(function (k) { ok(k in it, "item missing " + k); });
+    ["ingredientId", "aisle", "amount", "unit", "packages", "packLabel", "costUSD", "warnings"].forEach(function (k) { ok(k in it, "item missing " + k); });
   });
 
   test("never lists a confirmed fridge item; unconfirmed items still listed", function () {
@@ -444,10 +444,13 @@ SL.tests = (function () {
     eq(item(res, "cheddar").unit, "oz");
   });
 
-  test("costUSD per item and totalUSD as their sum", function () {
+  test("costUSD prices whole packages; totalUSD is their sum", function () {
     var res = SL.list.build(listState());
-    near(item(res, "chicken-broth").costUSD, 6.00, 1e-9, "8 × 0.75");
-    near(item(res, "cheddar").costUSD, 3.00, 1e-9, "6 × 0.50");
+    eq(item(res, "chicken-broth").packages, 2, "8 cups = 2 cartons of 4");
+    near(item(res, "chicken-broth").costUSD, 5.98, 1e-9, "2 × 2.99");
+    eq(item(res, "cheddar").packages, 1, "6 oz fits one 8 oz block");
+    near(item(res, "cheddar").costUSD, 3.99, 1e-9, "1 × 3.99");
+    eq(SL.list.packText(item(res, "chicken-broth")), "2 × 32 oz carton");
     var sum = res.items.reduce(function (a, it) { return a + it.costUSD; }, 0);
     near(res.totalUSD, sum, 0.011, "total is the sum");
   });

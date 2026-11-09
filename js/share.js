@@ -73,7 +73,9 @@ SL.share = (function () {
     built.items.forEach(function (it) {
       var ing = ings()[it.ingredientId] || { name: it.ingredientId };
       if (it.aisle !== aisle) { if (aisle !== null) lines.push(""); aisle = it.aisle; lines.push(aisle + ":"); }
-      lines.push("- " + ing.name + ", " + SL.util.fmtAmount(it.amount, it.unit) + " (" + money(it.costUSD) + " estimate)");
+      var pack = SL.list.packText(it);
+      lines.push("- " + ing.name + ", " + SL.util.fmtAmount(it.amount, it.unit) + (pack ? ", buy " + pack : "") +
+        " (" + money(it.costUSD) + " estimate)");
       it.warnings.forEach(function (w) { lines.push("    ! Check the label: " + w.text); });
     });
     if (!built.items.length) lines.push("Nothing to buy yet.");

@@ -83,7 +83,7 @@ PRD.md is the source of truth for product behavior. If this file and the PRD dis
 19. **Cost per serving:** USD to 2 decimals, labeled **"estimate"**. Pantry staples (`staple: true`) are left out of cost. Unmatched lines are left out of macros and cost, with the note "Excludes 1 unrecognized ingredient."
 20. **Servings scaling** rescales ingredients, macros and cost **immediately** and triggers a recheck.
 21. **Every recipe shows its source.**
-22. **Grocery list** = the ingredients of planned (non-leftover) slots, minus what's in the fridge, minus staples. It **never** includes an item the user confirmed is in the fridge. Items are grouped by aisle, each with its total amount and estimated cost. It shows label warnings per person, using each slot's `eaterIds`, and an estimated total against the weekly budget. **Over budget** shows in dark ink with the icon **▲** and text "Over budget by $X". It is never red (that means "not safe") and never amber (that means "check the label").
+22. **Grocery list** = the ingredients of planned (non-leftover) slots, minus what's in the fridge, minus staples. It **never** includes an item the user confirmed is in the fridge. Items are grouped by aisle, each with its total amount, the whole packages to buy and their estimated cost. It shows label warnings per person, using each slot's `eaterIds`, and an estimated total against the weekly budget. **Over budget** shows in dark ink with the icon **▲** and text "Over budget by $X". It is never red (that means "not safe") and never amber (that means "check the label").
 23. **Profiles.**
     - **Owner.** There is exactly one adult profile: the account owner, `id: "p-owner"`, `kind: "adult"`.
     - **Children only.** Every other profile is a **child** (`kind: "child"`) with **only a first name and restrictions** and no account. **No other adult profiles.** Other adults (a partner, a roommate) need their own account, which is out of scope for the prototype. Setup and Family offer only "Add a child". The store refuses any second `kind: "adult"` profile.
@@ -224,7 +224,10 @@ SL.data.importSamples = {             // canned results for link / photo import
 };
 
 // data/prices.js  (Eleanor) — US national average estimates, USD, every non-staple ingredient
-SL.data.prices = { "soy-sauce": { perUnit: 0.12, unit: "tbsp" } };
+// perUnit is for cost per serving; pack is the store package the grocery list buys
+// (label null for items sold loose, like one lemon)
+SL.data.prices = { "soy-sauce": { perUnit: 0.12, unit: "tbsp",
+                                  pack: { size: 20, usd: 2.99, label: "10 oz bottle" } } };
 ```
 
 **Unmatched recipe lines** (from import) use `{ ingredientId: null, rawText: "2 tbsp oyster sauce", amount: 2, unit: "tbsp" }`. They are a label row for everyone ("We don't recognize this ingredient, so we can't check it.") until the user edits the line to pick a catalog ingredient or removes it.
@@ -285,7 +288,7 @@ SL.data.prices = { "soy-sauce": { perUnit: 0.12, unit: "tbsp" } };
 | `SL.safety.suggest(mealType, eaterIds, state)` | safety.js | up to 5 `{ recipe, check, missing: [ingredientId] }` sorted per 2.16, never `unsafe`; recipes are effective recipes (overrides applied) |
 | `SL.recipes.find(id, state)` / `SL.recipes.effective(id, state)` | recipes.js | the raw recipe from `state.recipes` or `SL.data.recipes`; the same with `recipeOverrides` applied (swaps, then servings) |
 | `SL.recipes.scale(recipe, servings)` / `SL.recipes.macros(recipe)` / `SL.recipes.cost(recipe)` | recipes.js | scaled recipe; per-serving `{ kcal, proteinG, carbsG, fatG }`; per-serving `{ usd, excludedCount }` |
-| `SL.list.build(state)` | list.js | `{ items: [{ ingredientId, aisle, amount, unit, costUSD, warnings: [{ personId, text }] }], totalUSD, budgetUSD }` |
+| `SL.list.build(state)` / `SL.list.packText(item)` | list.js | `{ items: [{ ingredientId, aisle, amount, unit, packages, packLabel, costUSD, warnings: [{ personId, text }] }], totalUSD, budgetUSD }`; `packText` gives "2 × 8 oz block", or "" for loose items |
 | `SL.share.open(kind, payload)` / `SL.share.report(recipeId)` | share.js | opens the overlay; `kind` is `"recipe"` (`{ recipeId }`), `"plan"` (`{ weekStart }`) or `"list"` (`{}`) |
 | `SL.app.go(route)` | app.js | navigates |
 
@@ -304,7 +307,7 @@ SL.data.prices = { "soy-sauce": { perUnit: 0.12, unit: "tbsp" } };
 1. For every plan slot on or after `weekStart` with `leftoverOf: null`, take `effective(recipeId)` scaled to the slot's `servings`.
 2. Sum the amounts per ingredient across those slots.
 3. Drop staples, unmatched lines and any ingredient with a fridge item where `confirmed: true`.
-4. Each item's `costUSD` is amount × `perUnit`, rounded to cents. `totalUSD` is the sum.
+4. **Whole packages.** People can't buy 3 tbsp of butter, so the list prices what they'd pay at the store. Each item's `packages` is amount ÷ `pack.size` rounded up (at least 1), and `costUSD` is `packages` × `pack.usd`, rounded to cents. `totalUSD` is the sum. Cost per serving on meals and recipes still uses `perUnit`.
 5. **Warnings:** for each slot using the item, run `checkMeal(recipe, slot.eaterIds, state)`. Every `label` row for that ingredient becomes `{ personId, text: row.reason }`, one per person.
 6. Sort the items by aisle, then name.
 

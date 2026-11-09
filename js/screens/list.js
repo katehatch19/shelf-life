@@ -51,7 +51,8 @@ SL.list = (function () {
         if (!ing || ing.staple || inFridge[id]) return;
         if (!byId[id]) {
           byId[id] = { ingredientId: id, aisle: ing.aisle || "Other", amount: 0,
-                       unit: line.unit || ing.unit, costUSD: 0, warnings: [] };
+                       unit: line.unit || ing.unit, packages: 0, packLabel: null,
+                       costUSD: 0, warnings: [] };
           order.push(id);
         }
         byId[id].amount += Number(line.amount) || 0;
@@ -59,12 +60,20 @@ SL.list = (function () {
       });
     });
 
-    // 4. Cost per item, then total.
+    // 4. Cost per item, then total. People buy whole packages, so the list
+    // rounds up to the store package (3 tbsp of butter costs a whole box).
+    // A price without a pack falls back to amount x perUnit.
     var total = 0;
     order.forEach(function (id) {
-      var p = prices[id];
-      byId[id].costUSD = p ? cents(byId[id].amount * p.perUnit) : 0;
-      total += byId[id].costUSD;
+      var p = prices[id], it = byId[id];
+      if (p && p.pack && p.pack.size > 0) {
+        it.packages = Math.max(1, Math.ceil(Number((it.amount / p.pack.size).toFixed(6))));
+        it.packLabel = p.pack.label || null;
+        it.costUSD = cents(it.packages * p.pack.usd);
+      } else {
+        it.costUSD = p ? cents(it.amount * p.perUnit) : 0;
+      }
+      total += it.costUSD;
     });
 
     // 5. Label warnings from each slot's own eaters, one per person per item.
@@ -99,7 +108,13 @@ SL.list = (function () {
     return { items: items, totalUSD: cents(total), budgetUSD: (state && state.budgetUSD) || 0 };
   }
 
-  return { build: build };
+  /* "1 lb box (4 sticks)" or "2 × 8 oz block"; "" for loose items. */
+  function packText(it) {
+    if (!it || !it.packLabel || !it.packages) return "";
+    return (it.packages > 1 ? it.packages + " × " : "") + it.packLabel;
+  }
+
+  return { build: build, packText: packText };
 })();
 
 // ---- UI (Step 3): SL.screens.list goes here ----
@@ -575,7 +590,8 @@ SL.screens.list = (function () {
         }
         html += '<li class="item ls-item" data-iid="' + esc(it.ingredientId) + '"><div class="item__main">' +
           '<div class="spread"><span><strong>' + esc(ing.name) + '</strong> <span class="muted">' + esc(SL.util.fmtAmount(it.amount, it.unit)) + "</span></span>" +
-          '<span class="ls-cost">' + money(it.costUSD) + ' <span class="small muted">estimate</span></span></div>';
+          '<span class="ls-cost">' + money(it.costUSD) + ' <span class="small muted">estimate</span></span></div>' +
+          (SL.list.packText(it) ? '<p class="small muted ls-pack">Buy ' + esc(SL.list.packText(it)) + "</p>" : "");
         it.warnings.forEach(function (w) {
           html += '<p class="warning ls-warn"><span aria-hidden="true">!</span><span><strong>Check the label for ' +
             esc(nameOf(w.personId, state)) + ":</strong> " + esc(w.text) + "</span></p>";
@@ -583,7 +599,7 @@ SL.screens.list = (function () {
         html += "</div></li>";
       });
       html += "</ul></section></div>" +
-        '<p class="small muted">Leaves out pantry staples and anything confirmed in your fridge. Prices are US average estimates.</p>';
+        '<p class="small muted">Leaves out pantry staples and anything confirmed in your fridge. Prices are US average estimates for whole packages, so the total is close to what you will pay at the store.</p>';
     }
     html += '<div class="row ls-actions"><button type="button" class="btn btn-secondary" data-act="share-list" aria-label="Share grocery list">↗ Share list</button></div>' +
       '<p class="disclaimer">' + esc(DISCLAIMER) + "</p>";
